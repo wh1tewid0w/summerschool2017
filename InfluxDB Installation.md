@@ -13,3 +13,7 @@ sudo dpkg -i influxdb_1.3.1_amd64.deb
 ```bash
 influxd
 ```
+#### Optional in Screen starten
+```bash
+screen -d -m influxd
+```
