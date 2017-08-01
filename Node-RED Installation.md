@@ -1,4 +1,4 @@
-# Grafana Installation (Ubuntu/Debian)
+# Node-RED Installation (Ubuntu/Debian)
 ### Step 1: Node.js herunterladen und installieren
 ```bash
 curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
