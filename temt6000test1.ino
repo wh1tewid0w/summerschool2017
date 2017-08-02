@@ -18,6 +18,7 @@ void loop() {
   float voltage = (3.3/4096*analogRead(A1));
   float strom = (voltage/10020);
   float lichtstrom = (strom*2*1000000);
+  lichtstrom = lichtstrom / 6.5852;     //In Prozent 658,52 (Maximalwert) / 100
  Serial.print(lichtstrom,2);
  
 Serial.print("\n");
