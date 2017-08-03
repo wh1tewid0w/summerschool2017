@@ -55,6 +55,21 @@ static const u1_t PROGMEM APPSKEY[16] = { 0x3A, 0x67, 0x79, 0xA5, 0x50, 0x4F, 0x
 // LoRaWAN end-device address (DevAddr)
 static const u4_t DEVADDR = 0x26011CD5 ; // <-- Change this address for every node!
 
+
+//Lichtsensor
+const int analogInPin = A1; //Analog input pin that potentiometer is attached to
+const int analogOutPin = 9; // Analog output pin that the LED is attached to
+
+int sensorValue = 0;        // value read from the pot
+int outputValue = 0;        // value output to the PWM (analog out)
+
+
+//Bodenfeuchtigkeitssensor
+int val = 0; //value for storing moisture value
+int soilPin = A2; //Declare a variable for the soil moisture sensor
+int soilPower = 7; //Variable for Soil moisture
+
+
 // These callbacks are only used in over-the-air activation, so they are
 // left empty here (we cannot leave them out completely unless
 // DISABLE_JOIN is set in config.h, otherwise the linker will complain).
@@ -64,7 +79,7 @@ void os_getDevKey (u1_t* buf) { }
 
 
 
-static uint8_t mydata[5];
+static uint8_t mydata[7];
 static osjob_t sendjob;
 
 // Schedule TX every this many seconds (might become longer due to duty
@@ -76,7 +91,7 @@ const lmic_pinmap lmic_pins = {
   .nss = 8,
   .rxtx = LMIC_UNUSED_PIN,
   .rst = 5,
-  .dio = {3, 6, LMIC_UNUSED_PIN},
+  .dio = {3, 6, LMIC_UNUSED_PIN}, 
 };
 
 void onEvent (ev_t ev) {
@@ -162,7 +177,7 @@ void sensor_data() {
   mydata[1] = lowtemp;
 
   float alt = bme.readAltitude(SEALEVELPRESSURE_HPA);
-  uint16_t altitude = (uint16_t) ((alt / 1013.25) * 100);
+  uint16_t altitude = (uint16_t) (alt / 1013.25 * 100);
   uint8_t alti = (uint8_t) altitude;
 
   mydata[2] = alti;
@@ -180,22 +195,37 @@ void sensor_data() {
   Serial.println(humidity); 
   Serial.println(mydata[3]); 
   Serial.println(); 
-  Serial.println(mydata[4]); 
+  Serial.println(mydata[4]);
+  
+
+  sensorValue = analogRead(analogInPin); 
+  float voltage = (3.3/4096*sensorValue);
+  float strom = (voltage/10020);
+  float lichtstrom = (strom*2*1000000);
+  lichtstrom = lichtstrom / 6.5852;         //In Prozent 658,52 (Maximalwert) / 100
+  uint8_t lichtstrom_int = (uint8_t) lichtstrom;
+
+  Serial.print("Helligkeit: "); 
+  Serial.print(lichtstrom);
+  Serial.print("%");
+  Serial.print("\n");
+  
+
+  mydata[5] = lichtstrom_int;
+
+  soilPower = analogRead(soilPin); 
+
+  uint8_t percent = (uint8_t) ((analogRead(A2)/33.30F) * 100); 
+  Serial.println(percent);
+  
+  mydata[6] = percent; 
+
+  
 }
 
 
 void do_send(osjob_t* j) {
-
-  /*void sensor_data() {
-    uint16_t temperature = bme.readTemperature();
-    uint8_t hightemp = (temperature & 0xFF00) >> 8;
-    uint8_t lowtemp = (temperature & 0x00FF);
-
-    uint8_t altitude = bme.readAltitude(SEALEVELPRESSURE_HPA);
-
-    uint16_t humidity = bme.readHumidity();
-    uint8_t highhum = (humidity & 0xFF00);
-    uint8_t lowhum = (humidity & 0x00FF);*/
+  
   sensor_data();
 
   // Check if there is not a current TX/RX job running
@@ -207,14 +237,6 @@ void do_send(osjob_t* j) {
     Serial.println(F("Packet queued"));
   }
   // Next TX is scheduled after TX_COMPLETE event.
-
-  //Messwerte der Sensoren
-
-  //Serial.print(bme.readTemperature());
-
-  /*Serial.print(bme.readAltitude(SEALEVELPRESSURE_HPA));
-
-    Serial.print(bme.readHumidity());*/
 }
 
 void setup() {
@@ -231,6 +253,11 @@ void setup() {
 
   Serial.begin(115200);
   Serial.println(F("Starting"));
+
+  analogReadResolution(12); //Lichtsensor, Bodenfeuchtigkeitssensor
+
+  pinMode(soilPower, OUTPUT); //Set D7 as an output
+  digitalWrite(soilPower, LOW); //Set to Low so no power is flowing through the sensor
 
 #ifdef VCC_ENABLE
   // For Pinoccio Scout boards
