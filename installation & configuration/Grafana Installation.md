@@ -17,4 +17,15 @@ sudo dpkg -i grafana_4.4.2_amd64.deb
 ```bash
 sudo service grafana-server start
 ```
+## Konfiguration
+![Grafana Dashboard](../img/grafanadash.png)
+### Datenbank hinterlegen
+1. In Navigation auf Data Sources
+2. Add Data Sources
+3. Alle Daten eingeben, fertig
+### Measurement einem Graph zuweisen
+1. Im Dashboard neuen Graph hinzufügen
+2. Edit > Metrics
+3. Panel Data Sources -> Datenbank auswählen
+4. Bei Select richtigen Messwert hinterlegen
 
