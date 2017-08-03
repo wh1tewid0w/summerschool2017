@@ -1,4 +1,5 @@
-# Node-RED Installation (Ubuntu/Debian)
+# Node-RED Installation und Konfiguration (Ubuntu/Debian)
+## Installation
 ### Step 1: Node.js herunterladen und installieren
 ```bash
 curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
@@ -20,3 +21,5 @@ node-red
 ```bash
 screen -d -m node-red
 ```
+## Konfiguration
+![Node-RED Flow Chart](img/nodered.PNG)
