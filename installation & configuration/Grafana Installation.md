@@ -1,4 +1,5 @@
 # Grafana Installation & Konfiguration (Ubuntu/Debian)
+Visualisierungstool für Datenanalyse und Monitoring von z.B. Sensordaten
 ## Installation
 ### Step 1: Herunterladen und Dependencies installieren
 ```bash
