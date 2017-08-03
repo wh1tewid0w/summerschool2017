@@ -38,6 +38,7 @@
 #include <Adafruit_BME280.h> //bme library einbinden
 #include <Adafruit_Sensor.h> //Zusatz zur bme library
 #define SEALEVELPRESSURE_HPA (1013.25) //
+#define VBATPIN A7 
 
 Adafruit_BME280 bme; //I2C
 
@@ -78,7 +79,7 @@ void os_getDevKey (u1_t* buf) { }
 
 
 
-static uint8_t sensordata[7];
+static uint8_t sensordata[8];
 static osjob_t sendjob;
 
 // Schedule TX every this many seconds (might become longer due to duty
@@ -90,7 +91,7 @@ const lmic_pinmap lmic_pins = {
   .nss = 8,
   .rxtx = LMIC_UNUSED_PIN,
   .rst = 5,
-  .dio = {3, 6, LMIC_UNUSED_PIN}, 
+  .dio = {3, 6, LMIC_UNUSED_PIN},
 };
 
 void onEvent (ev_t ev) {
@@ -163,7 +164,7 @@ void sensor_data() {
   //Temperatur
   float tempratureReadout = (bme.readTemperature() + 50) * 100; //Temperatur wird um 50°C nach rechts verschoben, dass Temperaturen von -50°C bis +50°C gemessen werden, danach wird mit 100 multipliziert, um Komma zahlen zu vermeiden
   uint16_t temperature = (uint16_t) tempratureReadout; //Temperatur wird gecastet, also von float in ein uint16_t umgewandelt
-  uint8_t hightempratureByte = (uint8_t) ((temperature & 0xFF00) >> 8); // bitshift um 8 Stellen nach rechts 
+  uint8_t hightempratureByte = (uint8_t) ((temperature & 0xFF00) >> 8); // bitshift um 8 Stellen nach rechts
   uint8_t lowtempratureByte = (uint8_t) (temperature & 0xFF); //bitshift um 8 Stellen nach links
   Serial.println(hightempratureByte);
   Serial.println(lowtempratureByte);
@@ -171,9 +172,9 @@ void sensor_data() {
 
   //Luftdruck
   float pressureReadout = bme.readPressure() / 100.0F;
-  uint16_t pressure = (uint16_t ) ((pressure / 1013.25) * 100);
+  uint16_t pressure = (uint16_t ) ((pressureReadout / 1013.25) * 100);
   uint8_t pressureByte = (uint8_t) pressure;
-  Serial.println(pressureByte); 
+  Serial.println(pressureByte);
 
 
   //Luftfeuchtigkeit
@@ -182,24 +183,32 @@ void sensor_data() {
   uint8_t highhumidityByte = (uint8_t) ((humidity & 0xFF00) >> 8);
   uint8_t lowhumidityByte = (uint8_t) (humidity & 0xFF);
   Serial.println(highhumidityByte);
-  Serial.println(lowhumidityByte); 
+  Serial.println(lowhumidityByte);
 
-  
+
   //Lichtsensor
   lightsensorValue = analogRead(analogInPin);
-  float lightsensorVoltage = (3.3/4096*lightsensorValue);
-  float lightsensorStrom = (lightsensorVoltage/10020);
-  float lightstrom = (lightsensorStrom*2*1000000);
+  float lightsensorVoltage = (3.3 / 4096 * lightsensorValue);
+  float lightsensorStrom = (lightsensorVoltage / 10020);
+  float lightstrom = (lightsensorStrom * 2 * 1000000);
   lightstrom = lightstrom / 6.5852;         //In Prozent 658,52 (Maximalwert) / 100
   uint8_t lightstromInt = (uint8_t) lightstrom;
   Serial.println(lightstromInt);
 
 
   //Bodenfeuchtigkeitssensor
-  gndSoilPower = analogRead(gndSoilPin); 
-  uint8_t gndPercent = (uint8_t) ((analogRead(A2)/33.30F) * 100); 
+  gndSoilPower = analogRead(gndSoilPin);
+  uint8_t gndPercent = (uint8_t) ((analogRead(A2) / 33.30F) * 100);
   Serial.println(gndPercent);
 
+  //Akkustand auslesen
+  float measuredvbat = analogRead(VBATPIN);
+  measuredvbat *= 2;    // we divided by 2, so multiply back
+  measuredvbat *= 3.3;  // Multiply by 3.3V, our reference voltage
+  measuredvbat /= 1024; // convert to voltage
+  uint16_t akkuvoltageInt16 = (uint16_t) (measuredvbat * 100);
+  uint8_t akkuVoltage = (uint8_t) akkuvoltageInt16;
+  Serial.print("VBat: " ); Serial.println(measuredvbat);
 
   //Werte ins Array schreiben
   sensordata[0] = hightempratureByte;
@@ -209,13 +218,14 @@ void sensor_data() {
   sensordata[4] = lowhumidityByte;
   sensordata[5] = lightstromInt;
   sensordata[6] = gndPercent;
+  sensordata[7] = akkuVoltage;
 
-  
+
 }
 
 
 void do_send(osjob_t* j) {
-  
+
   sensor_data();
 
   // Check if there is not a current TX/RX job running
@@ -328,3 +338,4 @@ void loop() {
   os_runloop();
 
 }
+
