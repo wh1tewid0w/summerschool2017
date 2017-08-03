@@ -24,10 +24,12 @@ screen -d -m node-red
 ## Konfiguration
 ![Node-RED Flow Chart](../img/nodered.PNG)
 ### TTN-Node anlegen
+![TTN-Node](../img/ttn-node.png)
 - AppID (Name von Application)
 - Region (eu, us, etc.)
 - Access Key (In TTN Console zu finden)
 ### JavaScript Funktionen
+![JavaScript Function](../img/collect.png)
 - Beispiel zu Temperatur
   * Daten mit Bitshift zurück in 16bit Zahl
   * Umrechnung
@@ -39,4 +41,9 @@ temp16 = (temp16 / 100) - 50;
 message.payload = temp16;
 return message;
 ```
+### Influx Output Nodes
+![Influx-Out-Node](../img/influx-out.png)
+- Datenbank hinterlegen
+- Ausgabe in jeweiliges InfluxDB Measurement (Name eines Wertes) -> pressure, temp, humidity
+
 
