@@ -176,12 +176,12 @@ void sensor_data() {
   mydata[0] = hightemp;
   mydata[1] = lowtemp;
 
-  float alt = bme.readAltitude(SEALEVELPRESSURE_HPA);
-  uint16_t altitude = (uint16_t) (alt / 1013.25 * 100);
-  uint8_t alti = (uint8_t) altitude;
+  float pre = bme.readPressure() / 100.0F;
+  uint16_t pressure = (uint16_t ) ((pre / 1013.25) * 100);
+  uint8_t pres = (uint8_t) pressure;
 
-  mydata[2] = alti;
-  Serial.println(alti);
+  mydata[2] = pres;
+  Serial.println(pressure);
   Serial.println(); 
 
   float hum = bme.readHumidity() * 100;
