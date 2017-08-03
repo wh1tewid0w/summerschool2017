@@ -1,4 +1,3 @@
-Summer School 2017
 
 Hardware:
 
@@ -30,31 +29,36 @@ Nebel-Wert (als optionaler Wert (?))
 Warum Influx-DB & Node-RED?
 extra Chip -> RFM95W auf dem Feather
 Frequenz Band ISM LoRa 
+------------------------------------------------------
 
 
-Zeitplan: 
+## Zeitplan: 
+# Montag 31.07.2017
+- Besprechen der Projektdurchführung 
+- Planen der anfallenden Aufgaben
+- Vortrag für Dienstag vorbereiten
 
-Montag 31.07.2017
-Besprechen der Projektdurchführung 
-Planen der anfallenden Aufgaben
-Vortrag für Dienstag vorbereiten
+# Dienstag 01.08.2017
+- Vortrag besprechen ggf. überarbeiten
+- Sammeln der benötigten Materialien (Datenblätter der Sensoren, Links..)
+- Aufbau der Schaltung mit dem Arduino und den Sensoren
+    - Programmierung des  Arduino und der zugehörigen Sensoren
+- VM in der bwCloud einrichten
+    - Node Red, InfluxDB und Grafana installiert
 
-Dienstag 01.08.2017
-Vortrag besprechen ggf. überarbeiten
-Sammeln der benötigten Materialien (Datenblätter der Sensoren, Links..)
+# Mittwoch 02.08.2017
+- Anfangen die Doku zu schreiben, Github
+- Node Red, InfluxDB und Grafana verbunden -> Auswerten erster Testdaten
+- Sensor Daten über Lora an The Things Network gesendet
 
-Mittwoch 02.08.2017
-Anfangen die Doku zu schreiben
-Zwischenpräsentation vorbereite
-Aufbau der Schaltung mit dem Arduino und den Sensoren
-Programmierung des  Arduino und der zugehörigen Sensoren
+# Donnerstag 03.08.2017
+- Zwischenpräsentation halten 
+- Testläufe des Arduino mit ggf. Fehlererkennung und -behebung
 
-Donnerstag 03.08.2017
-Zwischenpräsentation halten 
-Testläufe des Arduino mit ggf. Fehlererkennung und -behebung
-VM in der bwCloud einrichten 
 Vorbereiten der Abschlusspräsentation 
 
-Freitag 04.08.2017
+# Freitag 04.08.2017
 Abschlusspräsentation vorbereiten/verbessern 
 14:00 Uhr Abschlusspräsentation
+
+
