@@ -1,5 +1,5 @@
 # Grafana Installation & Konfiguration (Ubuntu/Debian)
-------------------------------------------------------
+-
 ## Installation
 ### Step 1: Herunterladen und Dependencies installieren
 ```bash
