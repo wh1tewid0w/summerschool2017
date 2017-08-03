@@ -24,4 +24,5 @@ screen -d -m influxd
 2. `CREATE DATABASE DB_NAME`
 #### Für weitere Konfiguration
 Um Datenbank zu selektieren `USE DB_NAME`
+
 Messwerte zurücksetzen `DROP SERIES FROM /.*/`
