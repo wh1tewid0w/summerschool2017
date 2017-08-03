@@ -22,4 +22,4 @@ node-red
 screen -d -m node-red
 ```
 ## Konfiguration
-![Node-RED Flow Chart](img/nodered.PNG)
+![Node-RED Flow Chart](../img/nodered.PNG)
