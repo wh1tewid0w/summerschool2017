@@ -1,4 +1,6 @@
-# Grafana Installation (Ubuntu/Debian)
+# Grafana Installation & Konfiguration (Ubuntu/Debian)
+------------------------------------------------------
+## Installation
 ### Step 1: Herunterladen und Dependencies installieren
 ```bash
 wget https://s3-us-west-2.amazonaws.com/grafana-releases/release/grafana_4.4.2_amd64.deb
@@ -15,3 +17,4 @@ sudo dpkg -i grafana_4.4.2_amd64.deb
 ```bash
 sudo service grafana-server start
 ```
+
