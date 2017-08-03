@@ -35,5 +35,9 @@ Als Ausgabetool wird Grafana verwendet, dass die Sensordaten von der InfluxDB be
 	- Display SSD1306
 
 	
+##Fazit
+
+##Ausblick
+	
 	
 	
