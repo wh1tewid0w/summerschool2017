@@ -19,7 +19,7 @@ influxd
 screen -d -m influxd
 ```
 ## Konfiguration
-### Datenbank anlegen
+### Datenbank anlegen für Messwerte (vor Node-RED Konfiguration anlegen)
 1. Influx Shell öffnen mit `influx` auf Server (VM/Putty etc.)
 2. `CREATE DATABASE DB_NAME`
 #### Für weitere Konfiguration
