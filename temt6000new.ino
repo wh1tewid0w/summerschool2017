@@ -1,3 +1,6 @@
+
+// These constants won't change.  They're used to give names
+// to the pins used:
 const int analogInPin = A1;  // Analog input pin that the potentiometer is attached to
 const int analogOutPin = 9; // Analog output pin that the LED is attached to
 
@@ -14,14 +17,18 @@ void setup() {
 void loop() {
   // read the analog in value:
   sensorValue = analogRead(analogInPin);
-  
-  uint8_t voltage =(uint8_t) (3.3/4096*analogRead(A1));
-  uint8_t strom = (voltage/10020);
-  uint8_t lichtstrom = (strom*2*1000000);
-  lichtstrom = lichtstrom / 6.5852;         //In Prozent 658,52 (Maximalwert) / 100
- Serial.print(lichtstrom,2);
- 
-Serial.print("\n");
 
- delay(1000);
+  
+  float voltage = (3.3/4096*sensorValue);
+  float strom = (voltage/10020);
+  float lichtstrom = (strom*2*1000000);
+  lichtstrom = lichtstrom / 6.5852;         //In Prozent 658,52 (Maximalwert) / 100
+  uint8_t lichtstrom_int = (uint8_t) lichtstrom;
+
+  Serial.print("Helligkeit: "); 
+  Serial.print(lichtstrom_int);
+  Serial.print("%");
+  Serial.print("\n");
+
+  delay(1000);
 }
