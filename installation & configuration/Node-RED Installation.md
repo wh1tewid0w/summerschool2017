@@ -23,3 +23,20 @@ screen -d -m node-red
 ```
 ## Konfiguration
 ![Node-RED Flow Chart](../img/nodered.PNG)
+### TTN-Node anlegen
+- AppID (Name von Application)
+- Region (eu, us, etc.)
+- Access Key (In TTN Console zu finden)
+### JavaScript Funktionen
+- Beispiel zu Temperatur
+  * Daten mit Bitshift zurück in 16bit Zahl
+  * Umrechnung
+```
+var message = {};
+var temp16;
+temp16 = (msg.payload[0] << 8) | msg.payload[1];
+temp16 = (temp16 / 100) - 50;
+message.payload = temp16;
+return message;
+```
+
