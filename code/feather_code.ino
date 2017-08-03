@@ -205,7 +205,7 @@ void sensor_data() {
   float measuredvbat = analogRead(VBATPIN);
   measuredvbat *= 2;    // we divided by 2, so multiply back
   measuredvbat *= 3.3;  // Multiply by 3.3V, our reference voltage
-  measuredvbat /= 1024; // convert to voltage
+  measuredvbat /= 4096; // convert to voltage
   uint16_t akkuvoltageInt16 = (uint16_t) (measuredvbat * 100);
   uint8_t akkuVoltage = (uint8_t) akkuvoltageInt16;
   Serial.print("VBat: " ); Serial.println(measuredvbat);
