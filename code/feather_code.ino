@@ -31,13 +31,13 @@
 
  *******************************************************************************/
 
-#include <lmic.h>
+#include <lmic.h> //lmic master library (LoRa) 
 #include <hal/hal.h>
-#include <SPI.h>
+//#include <SPI.h> falls Sensoren mit SPI betrieben werden sollen
 
-#include <Adafruit_BME280.h>
-#include <Adafruit_Sensor.h>
-#define SEALEVELPRESSURE_HPA (1013.25)
+#include <Adafruit_BME280.h> //bme library einbinden
+#include <Adafruit_Sensor.h> //Zusatz zur bme library
+#define SEALEVELPRESSURE_HPA (1013.25) //
 
 Adafruit_BME280 bme; //I2C
 
@@ -60,14 +60,13 @@ static const u4_t DEVADDR = 0x26011CD5 ; // <-- Change this address for every no
 const int analogInPin = A1; //Analog input pin that potentiometer is attached to
 const int analogOutPin = 9; // Analog output pin that the LED is attached to
 
-int sensorValue = 0;        // value read from the pot
-int outputValue = 0;        // value output to the PWM (analog out)
+int lightsensorValue = 0;
 
 
 //Bodenfeuchtigkeitssensor
-int val = 0; //value for storing moisture value
-int soilPin = A2; //Declare a variable for the soil moisture sensor
-int soilPower = 7; //Variable for Soil moisture
+int gndSoilValue = 0; //value for storing moisture value
+int gndSoilPin = A2; //Declare a variable for the soil moisture sensor
+int gndSoilPower = 7; //Variable for Soil moisture
 
 
 // These callbacks are only used in over-the-air activation, so they are
@@ -79,7 +78,7 @@ void os_getDevKey (u1_t* buf) { }
 
 
 
-static uint8_t mydata[7];
+static uint8_t sensordata[7];
 static osjob_t sendjob;
 
 // Schedule TX every this many seconds (might become longer due to duty
@@ -160,65 +159,56 @@ void onEvent (ev_t ev) {
 }
 
 void sensor_data() {
-  float temp = (bme.readTemperature() + 50) * 100;
-  uint16_t temperature = (uint16_t) temp;
-  Serial.println();
-  Serial.print(temperature);
-  Serial.println();
-  uint8_t hightemp = (uint8_t) ((temperature & 0xFF00) >> 8);
-  uint8_t lowtemp = (uint8_t) (temperature & 0xFF);
-  Serial.println();
-  Serial.print(hightemp);
-  Serial.println();
-  Serial.println(); 
-  Serial.print(lowtemp);
-  Serial.println();
-  mydata[0] = hightemp;
-  mydata[1] = lowtemp;
 
-  float pre = bme.readPressure() / 100.0F;
-  uint16_t pressure = (uint16_t ) ((pre / 1013.25) * 100);
-  uint8_t pres = (uint8_t) pressure;
+  //Temperatur
+  float tempratureReadout = (bme.readTemperature() + 50) * 100; //Temperatur wird um 50°C nach rechts verschoben, dass Temperaturen von -50°C bis +50°C gemessen werden, danach wird mit 100 multipliziert, um Komma zahlen zu vermeiden
+  uint16_t temperature = (uint16_t) tempratureReadout; //Temperatur wird gecastet, also von float in ein uint16_t umgewandelt
+  uint8_t hightempratureByte = (uint8_t) ((temperature & 0xFF00) >> 8); // bitshift um 8 Stellen nach rechts 
+  uint8_t lowtempratureByte = (uint8_t) (temperature & 0xFF); //bitshift um 8 Stellen nach links
+  Serial.println(hightempratureByte);
+  Serial.println(lowtempratureByte);
 
-  mydata[2] = pres;
-  Serial.println(pressure);
-  Serial.println(); 
 
-  float hum = bme.readHumidity() * 100;
-  uint16_t humidity = (uint16_t) hum;
-  uint8_t highhum = (uint8_t) ((humidity & 0xFF00) >> 8);
-  uint8_t lowhum = (uint8_t) (humidity & 0xFF);
+  //Luftdruck
+  float pressureReadout = bme.readPressure() / 100.0F;
+  uint16_t pressure = (uint16_t ) ((pressure / 1013.25) * 100);
+  uint8_t pressureByte = (uint8_t) pressure;
+  Serial.println(pressureByte); 
 
-  mydata[3] = highhum;
-  mydata[4] = lowhum;
 
-  Serial.println(humidity); 
-  Serial.println(mydata[3]); 
-  Serial.println(); 
-  Serial.println(mydata[4]);
+  //Luftfeuchtigkeit
+  float humidityReadout = bme.readHumidity() * 100;
+  uint16_t humidity = (uint16_t) humidityReadout;
+  uint8_t highhumidityByte = (uint8_t) ((humidity & 0xFF00) >> 8);
+  uint8_t lowhumidityByte = (uint8_t) (humidity & 0xFF);
+  Serial.println(highhumidityByte);
+  Serial.println(lowhumidityByte); 
+
   
+  //Lichtsensor
+  lightsensorValue = analogRead(analogInPin);
+  float lightsensorVoltage = (3.3/4096*lightsensorValue);
+  float lightsensorStrom = (lightsensorVoltage/10020);
+  float lightstrom = (lightsensorStrom*2*1000000);
+  lightstrom = lightstrom / 6.5852;         //In Prozent 658,52 (Maximalwert) / 100
+  uint8_t lightstromInt = (uint8_t) lightstrom;
+  Serial.println(lightstromInt);
 
-  sensorValue = analogRead(analogInPin); 
-  float voltage = (3.3/4096*sensorValue);
-  float strom = (voltage/10020);
-  float lichtstrom = (strom*2*1000000);
-  lichtstrom = lichtstrom / 6.5852;         //In Prozent 658,52 (Maximalwert) / 100
-  uint8_t lichtstrom_int = (uint8_t) lichtstrom;
 
-  Serial.print("Helligkeit: "); 
-  Serial.print(lichtstrom);
-  Serial.print("%");
-  Serial.print("\n");
-  
+  //Bodenfeuchtigkeitssensor
+  gndSoilPower = analogRead(gndSoilPin); 
+  uint8_t gndPercent = (uint8_t) ((analogRead(A2)/33.30F) * 100); 
+  Serial.println(gndPercent);
 
-  mydata[5] = lichtstrom_int;
 
-  soilPower = analogRead(soilPin); 
-
-  uint8_t percent = (uint8_t) ((analogRead(A2)/33.30F) * 100); 
-  Serial.println(percent);
-  
-  mydata[6] = percent; 
+  //Werte ins Array schreiben
+  sensordata[0] = hightempratureByte;
+  sensordata[1] = lowtempratureByte;
+  sensordata[2] = pressureByte;
+  sensordata[3] = highhumidityByte;
+  sensordata[4] = lowhumidityByte;
+  sensordata[5] = lightstromInt;
+  sensordata[6] = gndPercent;
 
   
 }
@@ -233,7 +223,7 @@ void do_send(osjob_t* j) {
     Serial.println(F("OP_TXRXPEND, not sending"));
   } else {
     // Prepare upstream data transmission at the next possible time.
-    LMIC_setTxData2(1, mydata, sizeof(mydata) , 0);
+    LMIC_setTxData2(1, sensordata, sizeof(sensordata) , 0);
     Serial.println(F("Packet queued"));
   }
   // Next TX is scheduled after TX_COMPLETE event.
@@ -243,7 +233,7 @@ void setup() {
   delay (5000);
   bool status;
 
-  // default settings
+  //bme Initialisierung
   status = bme.begin();
   delay(1000);
   if (!status) {
@@ -256,8 +246,11 @@ void setup() {
 
   analogReadResolution(12); //Lichtsensor, Bodenfeuchtigkeitssensor
 
-  pinMode(soilPower, OUTPUT); //Set D7 as an output
-  digitalWrite(soilPower, LOW); //Set to Low so no power is flowing through the sensor
+  //Bodenfeuchtigkeitssensor
+  pinMode(gndSoilPower, OUTPUT); //Set D7 as an output
+  digitalWrite(gndSoilPower, LOW); //Set to Low so no power is flowing through the sensor
+
+
 
 #ifdef VCC_ENABLE
   // For Pinoccio Scout boards
