@@ -16,13 +16,14 @@ void loop()
 {
 
 soilPower = analogRead(soilPin);
-
-Serial.print("Soil Moisture = ");    
+   
 //get soil moisture value from the function below and print it
 
-uint8_t percent =(uint8_t) (analogRead(A1)/40.96F);
-Serial.println(percent);
-
+uint8_t percent =(uint8_t) (analogRead(A1)/33.30F);
+Serial.print("Bodenfeuchigkeit: "); 
+Serial.print(percent);
+Serial.print("%");
+Serial.print("\n");
 
 //This 1 second timefrme is used so you can test the sensor and see it change in real-time.
 //For in-plant applications, you will want to take readings much less frequently.
