@@ -206,9 +206,10 @@ void sensor_data() {
   measuredvbat *= 2;    // we divided by 2, so multiply back
   measuredvbat *= 3.3;  // Multiply by 3.3V, our reference voltage
   measuredvbat /= 4096; // convert to voltage
-  uint16_t akkuvoltageInt16 = (uint16_t) (measuredvbat * 100);
-  uint8_t akkuVoltage = (uint8_t) akkuvoltageInt16;
-  Serial.print("VBat: " ); Serial.println(measuredvbat);
+  uint16_t akkuvoltageInt16 = (uint16_t) ((measuredvbat -3.2)* 100 / 1.1);
+  uint8_t akkuPercent = (uint8_t) akkuvoltageInt16;
+  Serial.println(measuredvbat);
+  Serial.println(akkuPercent);
 
   //Werte ins Array schreiben
   sensordata[0] = hightempratureByte;
@@ -218,7 +219,7 @@ void sensor_data() {
   sensordata[4] = lowhumidityByte;
   sensordata[5] = lightstromInt;
   sensordata[6] = gndPercent;
-  sensordata[7] = akkuVoltage;
+  sensordata[7] = akkuPercent;
 
 
 }
