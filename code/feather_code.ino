@@ -201,6 +201,7 @@ void sensor_data() {
   uint8_t gndPercent = (uint8_t) ((analogRead(A2) / 33.30F) * 100);
   Serial.println(gndPercent);
 
+   
   //Akkustand auslesen
   float measuredvbat = analogRead(VBATPIN);
   measuredvbat *= 2;    // we divided by 2, so multiply back
@@ -211,6 +212,7 @@ void sensor_data() {
   Serial.println(measuredvbat);
   Serial.println(akkuPercent);
 
+   
   //Werte ins Array schreiben
   sensordata[0] = hightempratureByte;
   sensordata[1] = lowtempratureByte;
