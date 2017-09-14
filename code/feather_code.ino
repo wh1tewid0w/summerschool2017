@@ -162,8 +162,8 @@ void onEvent (ev_t ev) {
 void sensor_data() {
 
   //Temperatur
-  float tempratureReadout = (bme.readTemperature() + 50) * 100; //Temperatur wird um 50°C nach rechts verschoben, dass Temperaturen von -50°C bis +50°C gemessen werden, danach wird mit 100 multipliziert, um Komma zahlen zu vermeiden
-  uint16_t temperature = (uint16_t) tempratureReadout; //Temperatur wird gecastet, also von float in ein uint16_t umgewandelt
+  float temperatureReadout = (bme.readTemperature() + 50) * 100; //Temperatur wird um 50°C nach rechts verschoben, dass Temperaturen von -50°C bis +50°C gemessen werden, danach wird mit 100 multipliziert, um Komma zahlen zu vermeiden
+  uint16_t temperature = (uint16_t) temperatureReadout; //Temperatur wird gecastet, also von float in ein uint16_t umgewandelt
   uint8_t hightempratureByte = (uint8_t) ((temperature & 0xFF00) >> 8); // bitshift um 8 Stellen nach rechts
   uint8_t lowtempratureByte = (uint8_t) (temperature & 0xFF); //bitshift um 8 Stellen nach links
   Serial.println(hightempratureByte);
