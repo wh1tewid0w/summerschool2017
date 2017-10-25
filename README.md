@@ -32,8 +32,17 @@ Als Ausgabetool wird Grafana verwendet, dass die Sensordaten von der InfluxDB be
 
 	
 ## Fazit
+- Sensor läuft seit Donnerstag und schickt Daten 
+- Doku zum nachlesen auf Github, kann nachgebaut werden
+- Kosten belaufen sich auf ca 40€ (Kosten sind nicht optimiert)
 
 ## Ausblick
+- Jeder von uns kann es anhand der Doku nachbauen 
+- Display
+- Gehäuse
+- Benutzung in der Bibliothek
+- Massenproduktion möglich
+- Solarzelle für Energieeffizienz
 	
 	
 	
