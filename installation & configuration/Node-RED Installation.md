@@ -49,6 +49,12 @@ return message;
 ```
 ### Influx Output Nodes
 ![Influx-Out-Node](../img/influx-out.png)
+
+- Influx Erweiterung für Node-Red installieren
+```bash
+cd $home /.node-red
+npm install node-red-contrib-influxdb
+```
 - Datenbank hinterlegen
 - Ausgabe in jeweiliges InfluxDB Measurement (Name eines Wertes) -> pressure, temp, humidity
 
