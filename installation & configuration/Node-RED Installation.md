@@ -25,6 +25,7 @@ screen -d -m node-red
 ![Node-RED Flow Chart](../img/nodered.PNG)
 ### TTN-Node anlegen
 ![TTN-Node](../img/ttn-node.png)
+-TTN Erweiterung für Node-Red installieren
 ```bash
 cd $home /.node-red
 npm install node-red-contrib-ttn
